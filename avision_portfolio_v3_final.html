@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Avision — مونتاج سينمائي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--black:#0d0d0d;--charcoal:#1e1e1e;--charcoal2:#282828;--green:#5c7e28;--gl:#7aab32;--yellow:#f8e16f;--yd:#e8cc4a;--white:#f0ede6;--muted:#888078;--border:rgba(248,225,111,0.1);--borderl:rgba(248,225,111,0.18)}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'Cairo',sans-serif;overflow-x:hidden;direction:rtl}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;right:0;left:0;z-index:200;padding:1rem 3rem;display:flex;justify-content:space-between;align-items:center;background:rgba(13,13,13,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;gap:.65rem;text-decoration:none}
+.nav-logo-svg{width:34px;height:34px;flex-shrink:0}
+.nav-logo-text{font-family:'Cairo',sans-serif;font-size:1.25rem;font-weight:700;color:var(--yellow);letter-spacing:.04em}
+.nav-links{display:flex;gap:2.2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.82rem;font-weight:500;transition:color .3s}
+.nav-links a:hover{color:var(--yellow)}
+.nav-cta{font-family:'Cairo',sans-serif;font-size:.78rem;border:1px solid var(--yellow);color:var(--yellow);padding:.4rem 1.1rem;text-decoration:none;transition:all .3s;font-weight:600}
+.nav-cta:hover{background:var(--yellow);color:var(--black)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 3rem 5rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 35%,rgba(92,126,40,.18) 0%,transparent 55%),radial-gradient(ellipse at 80% 75%,rgba(248,225,111,.05) 0%,transparent 50%),var(--black)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(248,225,111,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(248,225,111,.035) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 75%)}
+.hero-wm{position:absolute;left:2rem;top:50%;transform:translateY(-50%);width:380px;opacity:.04;pointer-events:none;filter:invert(1)}
+.hero-counter{position:absolute;left:3rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:2.2rem;z-index:2}
+.cnum{font-family:'Cairo',sans-serif;font-size:2rem;color:var(--yellow);line-height:1;font-weight:900}
+.clbl{font-size:.62rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;font-family:'Space Mono',monospace;margin-top:.15rem}
+.hero-tag{font-size:.72rem;font-weight:700;letter-spacing:.22em;color:var(--gl);text-transform:uppercase;margin-bottom:1.4rem;display:flex;align-items:center;gap:.7rem}
+.hero-tag::before{content:'';width:2.2rem;height:1px;background:var(--gl)}
+.hero-headline{font-family:'Cairo',sans-serif;font-size:clamp(2.8rem,7.5vw,8rem);line-height:1.05;font-weight:900;color:var(--white);position:relative;z-index:1;text-align:right;max-width:800px}
+.hero-headline span{display:inline-block;padding-bottom:15px;}
+.hero-headline .accent{color:var(--yellow)}
+.hero-headline .outline{-webkit-text-stroke:1.5px rgba(248,225,111,.4);color:transparent}
+.hero-sub{margin-top:1.6rem;max-width:480px;font-size:.95rem;font-weight:300;color:var(--muted);line-height:2;text-align:right}
+.hero-actions{margin-top:2.2rem;display:flex;align-items:center;gap:1.8rem;flex-direction:row-reverse}
+.btn-p{font-family:'Cairo',sans-serif;font-size:.88rem;background:var(--yellow);color:var(--black);padding:.8rem 1.8rem;text-decoration:none;font-weight:700;transition:all .3s;display:inline-flex;align-items:center;gap:.4rem}
+.btn-p:hover{background:var(--yd);transform:translateY(-2px)}
+.btn-g{font-family:'Cairo',sans-serif;font-size:.82rem;color:var(--muted);text-decoration:none;border-bottom:1px solid rgba(136,128,120,.4);padding-bottom:2px;transition:all .3s;font-weight:500}
+.btn-g:hover{color:var(--white);border-color:var(--white)}
+.scroll-wrap{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.6rem;color:var(--muted);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;font-family:'Space Mono',monospace}
+.scroll-line{width:1px;height:2.8rem;background:linear-gradient(to bottom,var(--yellow),transparent);animation:sa 1.8s ease infinite}
+@keyframes sa{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ── MARQUEE ── */
+.mq-section{padding:1.3rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;background:var(--charcoal2)}
+.mq-track{display:flex;gap:3rem;white-space:nowrap;animation:mq 28s linear infinite}
+.mq-item{font-family:'Cairo',sans-serif;font-size:.9rem;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:1.4rem}
+.mq-dot{color:var(--yellow);font-size:.45rem}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SECTIONS ── */
+.section{padding:6.5rem 3rem}
+.stag{font-size:.68rem;font-weight:700;letter-spacing:.22em;color:var(--gl);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;justify-content:flex-end;gap:.7rem}
+.stag::after{content:'';width:1.8rem;height:1px;background:var(--gl)}
+.stitle{font-family:'Cairo',sans-serif;font-size:clamp(2rem,4vw,3.8rem);line-height:1.05;font-weight:900;color:var(--white);text-align:right}
+.stitle .y{color:var(--yellow)}
+.divider{width:100%;height:1px;background:var(--border)}
+
+/* ── WORK TABS ── */
+.work-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:3.5rem;justify-content:flex-end}
+.wtab{font-family:'Cairo',sans-serif;font-size:.82rem;font-weight:600;color:var(--muted);padding:.75rem 1.6rem;cursor:pointer;border:none;border-bottom:2px solid transparent;background:none;transition:all .3s}
+.wtab.active{color:var(--yellow);border-bottom-color:var(--yellow)}
+.wtab:hover:not(.active){color:var(--white)}
+.wpanel{display:none}.wpanel.active{display:block}
+
+/* ── ADS — proper vertical cards ── */
+.ads-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem}
+.ad-card{background:var(--charcoal);overflow:hidden;cursor:pointer;transition:transform .4s}
+.ad-card:hover{transform:translateY(-8px)}
+.ad-vthumb{position:relative;aspect-ratio:9/16;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.ad-vthumb-inner{position:absolute;inset:0}
+.avt1{background:linear-gradient(175deg,#0d1a08 0%,#1a2a10 40%,#111 100%)}
+.avt2{background:linear-gradient(175deg,#0a1420 0%,#101e30 40%,#0a0a0a 100%)}
+.avt3{background:linear-gradient(175deg,#1e1500 0%,#2a1e08 40%,#100a00 100%)}
+.ad-grid-ov{position:absolute;inset:0;background-image:linear-gradient(rgba(248,225,111,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(248,225,111,.03) 1px,transparent 1px);background-size:40px 40px}
+.ad-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 50%)}
+.ad-corner-line{position:absolute;top:0;right:0;width:3px;height:100%;background:var(--green);transform:scaleY(0);transform-origin:top;transition:transform .45s}
+.ad-card:hover .ad-corner-line{transform:scaleY(1)}
+.ad-play{width:50px;height:50px;border:1px solid rgba(248,225,111,.55);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.55);transition:all .4s;position:relative;z-index:2}
+.ad-play svg{fill:var(--yellow);width:16px;margin-right:-2px}
+.ad-card:hover .ad-play{opacity:1;transform:scale(1)}
+.ad-tag-badge{position:absolute;bottom:1rem;right:1rem;z-index:3;background:rgba(13,13,13,.75);border:1px solid var(--border);padding:.25rem .65rem;font-size:.6rem;font-family:'Space Mono',monospace;color:var(--gl);letter-spacing:.15em;text-transform:uppercase}
+.ad-body{padding:1.3rem 1.4rem 1.6rem;text-align:right;border-top:1px solid var(--border)}
+.ccat{font-size:.62rem;font-weight:700;letter-spacing:.18em;color:var(--gl);text-transform:uppercase;margin-bottom:.5rem;font-family:'Space Mono',monospace}
+.ctitle{font-family:'Cairo',sans-serif;font-size:1rem;font-weight:700;color:var(--white);margin-bottom:.45rem;line-height:1.35}
+.cdesc{font-size:.76rem;font-weight:300;color:var(--muted);line-height:1.85;margin-bottom:.6rem}
+.cdir{font-size:.68rem;color:rgba(92,126,40,.75);font-weight:600;display:block;margin-bottom:.35rem}
+.cmeta{font-size:.62rem;color:rgba(136,128,120,.55);font-family:'Space Mono',monospace}
+
+/* ── CONTENT CREATOR — horizontal ── */
+.yt-grid{display:flex;flex-direction:column;gap:1.5rem}
+.yt-card{display:grid;grid-template-columns:1.4fr 1fr;background:var(--charcoal);overflow:hidden;cursor:pointer;transition:all .4s;direction:rtl;position:relative}
+.yt-card:hover{background:#1c2414}
+.yt-thumb{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;aspect-ratio:16/9}
+.ytt1{background:linear-gradient(135deg,#1a2810,#0d1a08)}
+.ytt2{background:linear-gradient(135deg,#101e28,#0a1420)}
+.ytt3{background:linear-gradient(135deg,#1e1500,#2a1a00)}
+.yt-grid-ov{position:absolute;inset:0;background-image:linear-gradient(rgba(248,225,111,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(248,225,111,.03) 1px,transparent 1px);background-size:40px 40px}
+.yt-play{width:52px;height:52px;border:1px solid rgba(248,225,111,.6);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.5);transition:all .35s;position:relative;z-index:2}
+.yt-play svg{fill:var(--yellow);width:18px;margin-right:-2px}
+.yt-card:hover .yt-play{opacity:1;transform:scale(1)}
+.yt-bar{position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--green);transform:scaleX(0);transform-origin:right;transition:transform .4s}
+.yt-card:hover .yt-bar{transform:scaleX(1)}
+.yt-body{padding:2rem;display:flex;flex-direction:column;justify-content:center;text-align:right;border-right:1px solid var(--border)}
+
+/* ── REELS ── */
+.reels-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem}
+.reel-card{position:relative;background:var(--charcoal);overflow:hidden;cursor:pointer;border-radius:18px;transition:all .4s}
+.reel-card:hover{transform:scale(1.025)}
+.reel-thumb{aspect-ratio:9/19.5;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.rt1{background:linear-gradient(180deg,#0d1a08,#1a2810 50%,#050a02)}
+.rt2{background:linear-gradient(180deg,#0a1420,#101e28 50%,#020508)}
+.rt3{background:linear-gradient(180deg,#1e1500,#2a1a00 50%,#0a0700)}
+.reel-notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:65px;height:5px;background:rgba(0,0,0,.55);border-radius:3px}
+.reel-grid-ov{position:absolute;inset:0;background-image:linear-gradient(rgba(248,225,111,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(248,225,111,.025) 1px,transparent 1px);background-size:30px 30px}
+.reel-play{width:44px;height:44px;border:1px solid rgba(248,225,111,.55);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.5);transition:all .3s;position:relative;z-index:2}
+.reel-play svg{fill:var(--yellow);width:14px;margin-right:-2px}
+.reel-card:hover .reel-play{opacity:1;transform:scale(1)}
+.reel-ov{position:absolute;bottom:0;left:0;right:0;padding:1.1rem;background:linear-gradient(to top,rgba(0,0,0,.88) 0%,transparent 100%);text-align:right;z-index:3}
+.reel-cat{font-size:.58rem;font-weight:700;letter-spacing:.15em;color:var(--gl);text-transform:uppercase;margin-bottom:.3rem;font-family:'Space Mono',monospace}
+.reel-title{font-family:'Cairo',sans-serif;font-size:.88rem;font-weight:700;color:var(--white);line-height:1.35}
+.reel-desc{font-size:.68rem;color:rgba(240,237,230,.55);line-height:1.75;margin-top:.35rem;font-weight:300}
+.reel-body{padding:.85rem 1.1rem 1.1rem;text-align:right}
+
+/* ── ABOUT ── */
+.about-wrap{max-width:820px;margin:0 auto;text-align:right}
+.about-wrap p{font-size:.98rem;font-weight:300;line-height:2;color:rgba(240,237,230,.72);margin-bottom:1.4rem}
+.about-wrap p em{color:var(--yellow);font-style:normal;font-weight:600}
+.about-name{font-family:'Cairo',sans-serif;font-size:1.4rem;font-weight:900;color:var(--white);margin-bottom:1.4rem}
+
+/* ── CLIENTS ── */
+.clients-section{padding:5rem 3rem;background:var(--charcoal2)}
+.clients-grid{margin-top:3.5rem;display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--border)}
+.client-cell{background:var(--charcoal2);padding:2rem 1.5rem;display:flex;align-items:center;justify-content:center;transition:background .3s;cursor:pointer;position:relative;overflow:hidden}
+.client-cell:hover{background:#1c2414}
+.client-cell::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1.5px;background:var(--green);transform:scaleX(0);transform-origin:right;transition:transform .4s}
+.client-cell:hover::after{transform:scaleX(1)}
+.client-placeholder{font-family:'Cairo',sans-serif;font-size:.72rem;font-weight:700;color:rgba(136,128,120,.35);letter-spacing:.1em;text-align:center;text-transform:uppercase;transition:color .3s}
+.client-cell:hover .client-placeholder{color:rgba(248,225,111,.5)}
+.client-logo-mark{width:42px;height:42px;display:flex;align-items:center;justify-content:center;margin:0 auto .5rem;opacity:.25;transition:opacity .3s}
+.client-cell:hover .client-logo-mark{opacity:.6}
+
+/* ── CONTACT ── */
+.contact-section{padding:7rem 3rem;position:relative;overflow:hidden;text-align:center}
+.contact-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(92,126,40,.1) 0%,transparent 60%)}
+.contact-inner{max-width:680px;margin:0 auto}
+.contact-stag{font-size:.68rem;font-weight:700;letter-spacing:.22em;color:var(--gl);text-transform:uppercase;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:center;gap:.7rem}
+.contact-stag::before,.contact-stag::after{content:'';width:1.8rem;height:1px;background:var(--gl)}
+.ctag{font-size:1rem;font-weight:300;color:var(--muted);margin:1.4rem 0 2.8rem;line-height:2}
+.cemail{font-family:'Cairo',sans-serif;font-size:clamp(1.1rem,2.8vw,2rem);color:var(--yellow);text-decoration:none;display:block;margin-bottom:2.5rem;transition:color .3s;font-weight:700;direction:ltr;word-break:break-all}
+.cemail:hover{color:var(--yd)}
+.social-links{display:flex;justify-content:center;gap:1.2rem;margin-top:2.8rem;flex-wrap:wrap}
+.slink{display:flex;align-items:center;gap:.5rem;font-family:'Cairo',sans-serif;font-size:.78rem;font-weight:600;color:var(--muted);text-decoration:none;padding:.45rem .9rem;border:1px solid var(--border);transition:all .3s}
+.slink:hover{color:var(--yellow);border-color:rgba(248,225,111,.35);background:rgba(248,225,111,.04)}
+.slink svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:1.8rem 3rem;display:flex;justify-content:space-between;align-items:center;direction:rtl}
+.f-logo{display:flex;align-items:center;gap:.55rem;text-decoration:none}
+.f-logo svg{width:26px;height:26px}
+.f-logo-text{font-family:'Cairo',sans-serif;font-size:.95rem;font-weight:700;color:var(--yellow)}
+.f-copy{font-size:.65rem;color:var(--muted);font-family:'Space Mono',monospace}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+
+@media(max-width:900px){
+.hero{padding:0 1.5rem 4rem}
+nav{padding:1rem 1.5rem}
+.hero-counter{display:none}
+.hero-wm{display:none}
+.section{padding:4.5rem 1.5rem}
+.ads-grid,.reels-grid{grid-template-columns:1fr}
+.yt-card{grid-template-columns:1fr}
+.clients-grid{grid-template-columns:repeat(3,1fr)}
+.nav-links{display:none}
+footer{flex-direction:column;gap:1rem;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGO SVG inline (dragon-A mark, white) -->
+<svg id="logosvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="display:none">
+  <image href="/mnt/user-data/uploads/White.png" width="100" height="100"/>
+</svg>
+
+<!-- NAV -->
+<nav>
+  <a href="#home" class="nav-logo">
+    <img src="logos/White.png" alt="logo" style="width: 35px; height: 35px; object-fit: contain; display: inline-block; vertical-align: middle;">
+    <span class="nav-logo-text">Avision</span>
+</a>
+  <ul class="nav-links">
+    <li><a href="#work">أعمالي</a></li>
+    <li><a href="#about">عني</a></li>
+    <li><a href="#clients">العملاء</a></li>
+    <li><a href="#contact">تواصل</a></li>
+  </ul>
+  <a href="en/index.html" style="color: #fff; text-decoration: none; font-size: 14px; margin-left: 20px; vertical-align: middle;">English</a>
+  <a href="#contact" class="nav-cta">لنتحدث</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <img src="/mnt/user-data/uploads/White.png" alt="" class="hero-wm" aria-hidden="true" onerror="this.style.display='none'">
+
+  <div class="hero-counter">
+    <div><div class="cnum">+250</div><div class="clbl">مشروع</div></div>
+    <div><div class="cnum">+6</div><div class="clbl">سنوات</div></div>
+    <div><div class="cnum">+40</div><div class="clbl">عميل</div></div>
+  </div>
+
+  <div class="hero-tag">مونتير سينمائي — Avision</div>
+
+ <h1 class="hero-headline" style="position: relative; top: -250px; line-height: 1.15 !important; text-align: right; direction: rtl;">
+    <span style="font-size: 4.8rem; font-weight: 900; color: #f5f5f5; display: block;">المونتاج</span>
+    <span class="accent" style="font-size: 4.8rem; font-weight: 900; display: block;">ليس مجرد أداة،</span>
+    <span style="font-size: 4.8rem; font-weight: 900; color: #f5f5f5; display: block;">المونتاج رؤية</span>
+</h1>
+
+  <p class="hero-sub">أصنع تجارب بصرية تتجاوز الشاشة — كل قطعة مقصودة، كل لحظة مروية بنية.</p>
+
+  <div class="hero-actions">
+    <a href="#work" class="btn-p">استعرض أعمالي ←</a>
+    <a href="#about" class="btn-g">← تعرّف على أسلوبي</a>
+  </div>
+
+  <div class="scroll-wrap">
+    <span>scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="mq-section">
+  <div class="mq-track" id="mqt">
+    <div class="mq-item">مونتاج سينمائي<span class="mq-dot">✦</span></div>
+    <div class="mq-item">موشن جرافيك<span class="mq-dot">✦</span></div>
+    <div class="mq-item">رواية بصرية<span class="mq-dot">✦</span></div>
+    <div class="mq-item">تدرّج اللون<span class="mq-dot">✦</span></div>
+    <div class="mq-item">أفلام وثائقية<span class="mq-dot">✦</span></div>
+    <div class="mq-item">محتوى تجاري<span class="mq-dot">✦</span></div>
+    <div class="mq-item">ريلز وشورتس<span class="mq-dot">✦</span></div>
+    <div class="mq-item">هوية بصرية<span class="mq-dot">✦</span></div>
+    <div class="mq-item">مونتاج سينمائي<span class="mq-dot">✦</span></div>
+    <div class="mq-item">موشن جرافيك<span class="mq-dot">✦</span></div>
+    <div class="mq-item">رواية بصرية<span class="mq-dot">✦</span></div>
+    <div class="mq-item">تدرّج اللون<span class="mq-dot">✦</span></div>
+    <div class="mq-item">أفلام وثائقية<span class="mq-dot">✦</span></div>
+    <div class="mq-item">محتوى تجاري<span class="mq-dot">✦</span></div>
+    <div class="mq-item">ريلز وشورتس<span class="mq-dot">✦</span></div>
+    <div class="mq-item">هوية بصرية<span class="mq-dot">✦</span></div>
+  </div>
+</div>
+
+<!-- WORK -->
+<section class="section" id="work">
+  <div class="stag">أعمال مختارة</div>
+  <h2 class="stitle" style="margin-bottom:2.5rem">قصص <span class="y">رويتها</span></h2>
+
+  <div class="work-tabs reveal">
+    <button class="wtab active" onclick="switchTab('ads',this)">إعلانات لشركات</button>
+    <button class="wtab" onclick="switchTab('yt',this)">إعلانات بالعرض</button>
+    <button class="wtab" onclick="switchTab('reels',this)">إعلانات لبراندات</button>
+  </div>
+
+  <!-- ADS PANEL -->
+  <div class="wpanel active" id="panel-ads">
+    <div class="ads-grid reveal">
+
+      <div class="ad-card">
+        <div class="ad-vthumb">
+          <div style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:20;">
+    <img src="image/PC1.png" 
+         id="cover-PC1"
+         onclick="playVideoPC1()" 
+         style="width:100%; height:100%; aspect-ratio:9/16; object-fit:contain; background:black; position:absolute; top:0; left:0; z-index:22; cursor:pointer;" 
+         alt="Video Cover">
+
+    <iframe 
+        id="video-PC1"
+        src="https://www.youtube.com/embed/RD8bM5kMij0?enablejsapi=1&rel=0&modestbranding=1" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen 
+        style="width:100%; height:100%; aspect-ratio:9/16; object-fit:contain; background:black; position:absolute; top:0; left:0; z-index:21;">
+    </iframe>
+</div>
+
+<script>
+function playVideoPC1() {
+    document.getElementById('cover-PC1').style.display = 'none';
+    var iframe = document.getElementById('video-PC1');
+    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+}
+</script>
+          <div class="ad-vthumb-inner avt1"></div>
+          <div class="ad-grid-ov"></div>
+          <div class="ad-grad"></div>
+          <div class="ad-corner-line"></div>
+          <div class="ad-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+          <div class="ad-tag-badge">9:16 — 30 ث</div>
+        </div>
+        <div class="ad-body">
+          <div class="ccat">إعلان تجاري ✦ 2026</div>
+          <div class="ctitle">إعلان لشركة Samsung — لهاتف Galaxy S26 Ultra</div>
+          <div class="cdesc">إعلان لشركة Samsung لهاتف Galaxy S26 Ultra، يهدف إلى إبراز خصائص الذكاء الاصطناعي المدمجة في الهاتف بأسلوب عصري وجذاب.</div>
+          <span class="cdir">التوجه: إيقاع هادئ ومونتاج بسيط يبرز ميزات الجهاز.</span>
+          <div class="cmeta">إعلان رئيسي · عمودي</div>
+        </div>
+      </div>
+
+      <div class="ad-card">
+        <div class="ad-vthumb">
+          <div style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:20;">
+    <img src="image/PC2.png" 
+         id="cover-PC2"
+         onclick="playVideoPC2()" 
+         style="width:100%; height:100%; aspect-ratio:9/16; object-fit:contain; background:black; position:absolute; top:0; left:0; z-index:22; cursor:pointer;" 
+         alt="Video Cover">
+
+    <iframe 
+        id="video-PC2"
+        src="https://www.youtube.com/embed/MhriLwbwE-g?enablejsapi=1&rel=0&modestbranding=1" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen 
+        style="width:100%; height:100%; aspect-ratio:9/16; object-fit:contain; background:black; position:absolute; top:0; left:0; z-index:21;">
+    </iframe>
+</div>
+
+<script>
+function playVideoPC2() {
+    document.getElementById('cover-PC2').style.display = 'none';
+    var iframe = document.getElementById('video-PC2');
+    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+}
+</script>
+          <div class="ad-vthumb-inner avt2"></div>
+          <div class="ad-grid-ov"></div>
+          <div class="ad-grad"></div>
+          <div class="ad-corner-line"></div>
+          <div class="ad-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+          <div class="ad-tag-badge">9:16 — 60 ث</div>
+        </div>
+        <div class="ad-body">
+          <div class="ccat">إعلان تجاري ✦ 2026</div>
+          <div class="ctitle">إعلان لشركة Sony — لمنتجات INZONE</div>
+          <div class="cdesc">إعلان لشركة Sony لمنتجات INZONE، يركز على إبراز قوة الأداء وسرعة الاستجابة لمساعدة اللاعبين المحترفين على تقديم أفضل أداء في البطولات.
+</div>
+          <span class="cdir">التوجه: إيقاع هادئ ومونتاج بسيط يبرز قوة الأداء وسرعة الاستجابة لمنتجات INZONE.</span>
+          <div class="cmeta">إعلان رئيسي · عمودي</div>
+        </div>
+      </div>
+
+      <div class="ad-card">
+        <div class="ad-vthumb">
+          <div style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:20;">
+    <img src="image/PC3.png" 
+         id="cover-PC3"
+         onclick="playVideoPC3()" 
+         style="width:100%; height:100%; aspect-ratio:9/16; object-fit:contain; background:black; position:absolute; top:0; left:0; z-index:22; cursor:pointer;" 
+         alt="Video Cover">
+
+    <iframe 
+        id="video-PC3"
+        src="https://www.youtube.com/embed/RlC5j9GDuY8?enablejsapi=1&rel=0&modestbranding=1" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen 
+        style="width:100%; height:100%; aspect-ratio:9/16; object-fit:contain; background:black; position:absolute; top:0; left:0; z-index:21;">
+    </iframe>
+</div>
+
+<script>
+function playVideoPC3() {
+    document.getElementById('cover-PC3').style.display = 'none';
+    var iframe = document.getElementById('video-PC3');
+    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+}
+</script>
+          <div class="ad-vthumb-inner avt3"></div>
+          <div class="ad-grid-ov"></div>
+          <div class="ad-grad"></div>
+          <div class="ad-corner-line"></div>
+          <div class="ad-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+          <div class="ad-tag-badge">9:16 — 90 ث</div>
+        </div>
+        <div class="ad-body">
+          <div class="ccat">إعلان تجاري ✦ 2026</div>
+          <div class="ctitle">إعلان لشركة Logitech — لمنتجهم mouse G Pro X2 super strike</div>
+          <div class="cdesc">إعلان لشركة Logitech لمنتج G Pro X2 Super strike، يركز على إبراز سرعة الاستجابة والدقة العالية التي تساعد اللاعبين المحترفين على تقديم أفضل أداء داخل البطولات.
+</div>
+          <span class="cdir">التوجه:  إيقاع هادئ ومونتاج بسيط يبرز قوة الأداء وسرعة الاستجابة لماوس G Pro X2 super strike.</span>
+          <div class="cmeta">إعلان رئيسي · عمودي</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONTENT CREATOR PANEL -->
+  <div class="wpanel" id="panel-yt">
+    <div class="yt-grid reveal">
+
+      <div class="yt-card">
+        <div class="yt-body">
+          <div class="ccat">اعلان · فالكونز</div>
+          <div class="ctitle">اعلان ترويجي — لمحتوى فالكونز لعام 2026</div>
+          <div class="cdesc">مشروع لتيم @teamfalconsgg
+بعنوان: وش الجاي؟
+ركّزنا في هذا المشروع على إبراز جميع سلاسل فالكونز القادمة بأسلوب ممتع، وبإيقاع قوي يحافظ على الحماس ويشدّ انتباه المشاهد.
+</div>
+          <span class="cdir">أسلوب المونتاج: سردي قصصي + موشن جرافيك</span>
+          <div class="cmeta">2026 · سوشل ميديا</div>
+        </div>
+        <div class="yt-thumb ytt1" style="position:relative; overflow:visible;">
+          <div style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:20;">
+    <img src="image/PB1.png" 
+         id="cover-B1"
+         onclick="playVideo('B1')" 
+         style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:22; cursor:pointer;" 
+         alt="Video Cover">
+
+    <iframe 
+        id="video-B1"
+        src="https://www.youtube.com/embed/5sCeAPXd63A?enablejsapi=1&rel=0&modestbranding=1" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen 
+        style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:21;">
+    </iframe>
+</div>
+
+<script>
+function playVideo(id) {
+    // إخفاء الصورة
+    document.getElementById('cover-' + id).style.display = 'none';
+    // تشغيل الفيديو عن طريق إرسال أمر ليوتيوب
+    var iframe = document.getElementById('video-' + id);
+    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+}
+</script>
+          <div class="yt-grid-ov"></div>
+          <div class="yt-bar"></div>
+          <div class="yt-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        </div>
+      </div>
+
+      <div class="yt-card">
+        <div class="yt-body">
+          <div class="ccat">تجديد هوية · جامعة الملك سعود</div>
+          <div class="ctitle">عرض هوية بصرية — النادي الثقافي الاجتماعي</div>
+          <div class="cdesc">عرض هوية بصرية | النادي الثقافي الاجتماعي – كلية إدارة الأعمال – جامعة الملك سعود</div>
+          <span class="cdir">أسلوب المونتاج: موشن جرافيك بمشاعر صادقة</span>
+          <div class="cmeta">2026 · سوشل ميديا</div>
+        </div>
+        <div class="yt-thumb ytt2" style="position:relative; overflow:visible;">
+          <div style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:20;">
+    <img src="image/PB2.png" 
+         id="cover-B2"
+         onclick="playVideoB2()" 
+         style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:22; cursor:pointer;" 
+         alt="Video Cover">
+
+    <iframe 
+        id="video-B2"
+        src="https://www.youtube.com/embed/XBjj1pJ92CE?enablejsapi=1&rel=0&modestbranding=1" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen 
+        style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:21;">
+    </iframe>
+</div>
+
+<script>
+function playVideoB2() {
+    document.getElementById('cover-B2').style.display = 'none';
+    var iframe = document.getElementById('video-B2');
+    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+}
+</script>
+          <div class="yt-grid-ov"></div>
+          <div class="yt-bar"></div>
+          <div class="yt-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        </div>
+      </div>
+
+      <div class="yt-card">
+        <div class="yt-body">
+          <div class="ccat">اعلان · فالكونز عزيز</div>
+          <div class="ctitle">اعلان الجوي أووردز — فالكونز عزيز</div>
+          <div class="cdesc">مونتاج إعلان لليوتيوبر فالكونز عزيز لترشحه لجائزة الجوي أووردز.</div>
+          <span class="cdir">أسلوب المونتاج: سردي قصصي</span>
+          <div class="cmeta">2025 · سوشل ميديا</div>
+        </div>
+        <div class="yt-thumb ytt3" style="position:relative; overflow:visible;">
+          <div style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:20;">
+    <img src="image/PB3.png" 
+         id="cover-B3"
+         onclick="playVideoB3()" 
+         style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:22; cursor:pointer;" 
+         alt="Video Cover">
+
+    <iframe 
+        id="video-B3"
+        src="https://www.youtube.com/embed/4dtDE6SEHWw?enablejsapi=1&rel=0&modestbranding=1" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen 
+        style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:21;">
+    </iframe>
+</div>
+
+<script>
+function playVideoB3() {
+    document.getElementById('cover-B3').style.display = 'none';
+    var iframe = document.getElementById('video-B3');
+    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+}
+</script>
+          <div class="yt-grid-ov"></div>
+          <div class="yt-bar"></div>
+          <div class="yt-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- REELS PANEL -->
+  <div class="wpanel" id="panel-reels">
+    <div class="reels-grid reveal">
+
+      <div class="reel-card">
+        <div class="reel-thumb rt1" style="position:relative; overflow:visible;">
+          <div style="width:100%; height:92%; aspect-ratio:9/16; position:absolute; top:0; left:0; z-index:20; overflow:hidden; background:black;">
+    <img src="image/PA1.png" 
+         id="cover-A2" 
+         onclick="playVideoA2()" 
+         style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:22; cursor:pointer;" 
+         alt="Cover">
+
+    <iframe 
+        id="video-A2" 
+        src="https://www.youtube.com/embed/DibDmd18p9s?enablejsapi=1&rel=0&modestbranding=1" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen 
+        style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:21; border:none;">
+    </iframe>
+</div>
+
+<script>
+function playVideoA2() {
+    document.getElementById('cover-A2').style.display = 'none';
+    var iframe = document.getElementById('video-A2');
+    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+}
+</script>
+          <div class="reel-notch"></div>
+          <div class="reel-grid-ov"></div>
+          <div class="reel-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+          <div class="reel-ov">
+            <div class="reel-cat">social media ✦</div>
+            <div class="reel-title">  اعلان ملزلز + براند اوكامي</div>
+            <div class="reel-desc">فيديو ترويجي لتعاون اليوتيوبر ملزلز مع براند أوكامي لإنتاج براند ملابس خاص به.</div>
+          </div>
+        </div>
+        <div class="reel-body">
+          <span class="cdir">توجه: سردي قصصي + اقاع سريع.</span>
+          <div class="cmeta" style="margin-top:.3rem">32 ث · 9:16</div>
+        </div>
+      </div>
+
+      <div class="reel-card">
+        <div class="reel-thumb rt2">
+          <div style="width:100%; height:92%; position:absolute; top:0; left:0; z-index:20; overflow:hidden; background:black;">
+    <img src="image/PA2.png" 
+         id="cover-A1" 
+         onclick="playVideoA1()" 
+         style="width:101%; height:101%; object-fit:cover; position:absolute; top:-0.5%; left:-0.5%; z-index:22; cursor:pointer; outline: 2px solid #1a1a1a; outline-offset: -2px;" 
+         alt="Cover">
+
+    <iframe 
+        id="video-A1" 
+        src="https://www.youtube.com/embed/WAIhv2D0huU?enablejsapi=1&rel=0&modestbranding=1" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen 
+        style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:21; border:none;">
+    </iframe>
+</div>
+
+<script>
+function playVideoA1() {
+    document.getElementById('cover-A1').style.display = 'none';
+    var iframe = document.getElementById('video-A1');
+    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+}
+</script>
+          <div class="reel-notch"></div>
+          <div class="reel-grid-ov"></div>
+          <div class="reel-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+          <div class="reel-ov">
+            <div class="reel-cat">social media ✦</div>
+            <div class="reel-title">إعلان لمحمد عدنان | Call of Duty Mobile
+</div>
+            <div class="reel-desc">مونتاج إعلان لليوتيوبر محمد عدنان بالتعاون مع لعبة Call of Duty Mobile.</div>
+          </div>
+        </div>
+        <div class="reel-body">
+          <span class="cdir">توجه: سردي قصصي + اقاع سريع.</span>
+          <div class="cmeta" style="margin-top:.3rem">38 ث · 9:16</div>
+        </div>
+      </div>
+
+      <div class="reel-card">
+        <div class="reel-thumb rt3">
+          <div style="width:100%; height:92%; aspect-ratio:9/16; position:absolute; top:0; left:0; z-index:20; overflow:hidden; background:black;">
+    <img src="image/PA3.png" 
+         id="cover-A3" 
+         onclick="playVideoA3()" 
+         style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:22; cursor:pointer;" 
+         alt="Cover">
+
+    <iframe 
+        id="video-A3" 
+        src="https://www.youtube.com/embed/Vqgxm7FOd0w?enablejsapi=1&rel=0&modestbranding=1" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen 
+        style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:21; border:none;">
+    </iframe>
+</div>
+
+<script>
+function playVideoA3() {
+    document.getElementById('cover-A3').style.display = 'none';
+    var iframe = document.getElementById('video-A3');
+    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+}
+</script>
+          <div class="reel-notch"></div>
+          <div class="reel-grid-ov"></div>
+          <div class="reel-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+          <div class="reel-ov">
+            <div class="reel-cat">social media ✦</div>
+            <div class="reel-title">اعلان لبراند | O MATCHA</div>
+            <div class="reel-desc">اعلان لبراند | O MATCHA
+بالتعاون مع صناعة المحتوى mad v.</div>
+          </div>
+        </div>
+        <div class="reel-body">
+          <span class="cdir">توجه: مونتاج بإيقاع سريع وحماسي لإيصال الإحساس المناسب للمنتج.</span>
+          <div class="cmeta" style="margin-top:.3rem">30 ث · 9:16</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="stag">عني</div>
+  <h2 class="stitle" style="margin-bottom:2.5rem; line-height: 1.25; font-size: 3rem; font-weight: 900; position: relative; top: -25px !important;">
+    الإعلان <span class="y" style="color: var(--yellow);">استراتيجية</span> نمو.. <br> يحول الانتباه إلى تأثير
+</h2>
+
+  <div class="about-wrap reveal">
+    <div class="about-name">أمير | محرر فيديو وصانع محتوى إبداعي</div>
+    <p>بدأت رحلتي في عالم المونتاج منذ <em>6 سنوات</em>، مدفوعاً بشغف كبير بعالم السينما والفنون البصرية. خلال هذه الفترة، طورت مهاراتي من خلال العمل مع براندات وشركات وصناع محتوى، حيث أسعى دائماً لتقديم جودة تتجاوز مجرد "تعديل الفيديو" إلى صناعة تجربة بصرية متكاملة.</p>
+    <p>في محتواي الشخصي، أمارس دور <em>المخرج الإبداعي</em> حيث أختبر تقنيات السرد السينمائي وأطبقها في مشاريعي، مما يمنحني رؤية شاملة تبدأ من الفكرة وتصل إلى التفاصيل الفنية النهائية.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CLIENTS -->
+<div class="clients-section" id="clients">
+  <div class="stag" style="justify-content:flex-end">شراكات موثوقة</div>
+  <h2 class="stitle" style="margin-bottom:.5rem">حررت إعلانات <span class="y"> لـ :</span></h2>
+  <p style="text-align:right;color:var(--muted);font-size:.85rem;font-weight:300;margin-bottom:0;margin-top:.5rem">براندات وصناع محتوى وشركات من مختلف القطاعات</p>
+
+  <div class="clients-grid reveal">
+    <div class="client-cell">
+      <div>
+        <div class="client-logo-mark">
+          <img src="logos/SAM.png" alt="Sony" style="width: 180px; height: auto; object-fit: contain; display: block; margin: 0 auto;">
+          <svg viewBox="0 0 40 40" fill="rgba(248,225,111,0.6)" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="10" height="10" rx="2"/><rect x="22" y="8" width="10" height="10" rx="2"/><rect x="8" y="22" width="10" height="10" rx="2"/><rect x="22" y="22" width="10" height="10" rx="2"/></svg>
+        </div>
+        <div class="client-placeholder">SAMSUNG</div>
+      </div>
+    </div>
+    <div class="client-cell">
+      <div>
+        <div class="client-logo-mark">
+          <img src="logos/Toyota_logo_(Red).svg.png" alt="Sony" style="width: 65px; height: auto; object-fit: contain; display: block; margin: 0 auto;">
+          <svg viewBox="0 0 40 40" fill="rgba(248,225,111,0.6)" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="12"/><circle cx="20" cy="20" r="5" fill="rgba(13,13,13,0.8)"/></svg>
+        </div>
+        <div class="client-placeholder">TOYOTA</div>
+      </div>
+    </div>
+    <div class="client-cell">
+      <div>
+        <div class="client-logo-mark">
+          <img src="logos/sony-logo.png" alt="Sony" style="width: 130px; height: auto; object-fit: contain; filter: brightness(0) invert(1);">
+          <svg viewBox="0 0 40 40" fill="rgba(248,225,111,0.6)" xmlns="http://www.w3.org/2000/svg"><polygon points="20,6 34,32 6,32"/></svg>
+        </div>
+        <div class="client-placeholder">SONY</div>
+      </div>
+    </div>
+    <div class="client-cell">
+      <div>
+        <div class="client-logo-mark">
+          <img src="logos/TS.jpg" alt="Sony" style="width: 50px; height: auto; object-fit: contain; display: block; margin: 0 auto;">
+          <svg viewBox="0 0 40 40" fill="rgba(248,225,111,0.6)" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="14" width="28" height="4" rx="2"/><rect x="6" y="22" width="20" height="4" rx="2"/></svg>
+        </div>
+        <div class="client-placeholder">Team Saudi</div>
+      </div>
+    </div>
+    <div class="client-cell">
+      <div>
+        <div class="client-logo-mark">
+          <img src="logos/falcons logo.png" alt="Sony" style="width: 45px; height: auto; object-fit: contain; display: block; margin: 0 auto;">
+          <svg viewBox="0 0 40 40" fill="rgba(248,225,111,0.6)" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 L34 14 L34 26 L20 34 L6 26 L6 14 Z"/></svg>
+        </div>
+        <div class="client-placeholder">Team Falcons</div>
+      </div>
+    </div>
+    <div class="client-cell">
+      <div>
+        <div class="client-logo-mark">
+          <img src="logos/logitech-logo.png" alt="Sony" style="width: 130px; height: auto; object-fit: contain; filter: brightness(0) invert(1);">
+          <svg viewBox="0 0 40 40" fill="rgba(248,225,111,0.6)" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="20" r="8"/><circle cx="26" cy="20" r="8"/></svg>
+        </div>
+        <div class="client-placeholder">logitech</div>
+      </div>
+    </div>
+    <div class="client-cell">
+      <div>
+        <div class="client-logo-mark">
+          <img src="logos/MA logo.jpg" alt="Sony" style="width: 50px; height: auto; object-fit: contain; display: block; margin: 0 auto;">
+          <svg viewBox="0 0 40 40" fill="rgba(248,225,111,0.6)" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="24" height="24" rx="4"/><rect x="14" y="14" width="12" height="12" rx="2" fill="rgba(13,13,13,0.8)"/></svg>
+        </div>
+        <div class="client-placeholder">Mohamad Adnan
+</div>
+      </div>
+    </div>
+    <div class="client-cell">
+      <div>
+        <div class="client-logo-mark">
+          <img src="logos/okami.png" alt="Sony" style="width: 68px; height: auto; object-fit: contain; display: block; margin: 0 auto;">
+          <svg viewBox="0 0 40 40" fill="rgba(248,225,111,0.6)" xmlns="http://www.w3.org/2000/svg"><path d="M8 20 Q14 8 20 20 Q26 32 32 20"/><circle cx="20" cy="20" r="3"/></svg>
+        </div>
+        <div class="client-placeholder">OKAMI</div>
+      </div>
+    </div>
+    <div class="client-cell">
+      <div>
+        <div class="client-logo-mark">
+          <img src="logos/KSU logo.png" alt="Sony" style="width: 100px; height: auto; object-fit: contain; display: block; margin: 0 auto;">
+          <svg viewBox="0 0 40 40" fill="rgba(248,225,111,0.6)" xmlns="http://www.w3.org/2000/svg"><line x1="10" y1="20" x2="30" y2="20" stroke="rgba(248,225,111,0.6)" stroke-width="2"/><line x1="20" y1="10" x2="20" y2="30" stroke="rgba(248,225,111,0.6)" stroke-width="2"/><circle cx="20" cy="20" r="10" fill="none" stroke="rgba(248,225,111,0.6)" stroke-width="1.5"/></svg>
+        </div>
+        <div class="client-placeholder">King Saud University</div>
+      </div>
+    </div>
+    <div class="client-cell">
+      <div>
+        <div class="client-logo-mark">
+          <img src="logos/mlazlaz logo.png" alt="Sony" style="width: 170px; height: auto; object-fit: contain; display: block; margin: 0 auto;">
+          <svg viewBox="0 0 40 40" fill="rgba(248,225,111,0.6)" xmlns="http://www.w3.org/2000/svg"><polygon points="20,8 24,16 34,16 26,22 29,32 20,26 11,32 14,22 6,16 16,16"/></svg>
+        </div>
+        <div class="client-placeholder">MLZLZ
+</div>
+      </div>
+    </div>
+    <div class="client-cell">
+      <div>
+        <div class="client-logo-mark">
+          <img src="logos/PL logo.jpg" alt="Sony" style="width: 50px; height: auto; object-fit: contain; display: block; margin: 0 auto;">
+          <svg viewBox="0 0 40 40" fill="rgba(248,225,111,0.6)" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="18" width="24" height="4" rx="2"/><rect x="14" y="10" width="12" height="4" rx="2"/><rect x="14" y="26" width="12" height="4" rx="2"/></svg>
+        </div>
+        <div class="client-placeholder">PRIME eLeague</div>
+      </div>
+    </div>
+    <div class="client-cell">
+      <div>
+        <div class="client-logo-mark">
+          <img src="logos/COD M logo.png" alt="Sony" style="width: 85px; height: auto; object-fit: contain; display: block; margin: 0 auto;">
+          <svg viewBox="0 0 40 40" fill="rgba(248,225,111,0.6)" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="14" r="6"/><path d="M8 32 Q8 22 20 22 Q32 22 32 32"/></svg>
+        </div>
+        <div class="client-placeholder">Call of Duty Mobile</div>
+      </div>
+    </div>
+  </div>
+
+  <p style="text-align:center;color:rgba(136,128,120,.4);font-size:.68rem;font-family:'Space Mono',monospace;margin-top:2rem;letter-spacing:.15em;text-transform:uppercase">براندات وصناع محتوى وشركات من مختلف القطاعات
+
+</p>
+</div>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-bg"></div>
+  <div class="contact-inner reveal">
+    <div class="contact-stag">تواصل معي</div>
+    <h2 class="stitle" style="font-size:clamp(2.4rem,6vw,5rem);line-height:1.05;margin-bottom:0">لنصنع شيئاً<br><span class="y">لا يُنسى.</span></h2>
+    <p class="ctag">حول رؤيتك إلى واقع إعلاني مبهر. تواصل معي.</p>
+    <a href="mailto:amirouaddah.for.business@gmail.com" class="cemail">amirouaddah.for.business@gmail.com</a>
+    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=amirouaddah.for.business@gmail.com" 
+   target="_blank" 
+   class="btn-p" 
+   style="position: relative; z-index: 999; display: inline-flex; cursor: pointer; transition: transform 0.3s ease;">
+   ابدأ مشروعك ←
+</a>
+    <div class="social-links">
+      <!-- YouTube -->
+      <a href="https://www.youtube.com/@Avision-avo/videos" target="_blank" class="slink" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: #a1a1a1; z-index: 9999; position: relative;">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 18px; height: 18px; fill: currentColor;">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            <span style="font-size: 14px;">YouTube</span>
+        </a>
+      <!-- Instagram -->
+      <a href="https://www.instagram.com/avision.avo/" target="_blank" class="slink" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: #a1a1a1; z-index: 9999; position: relative;">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+            <span style="font-size: 14px;">Instagram</span>
+        </a>
+      <!-- X/Twitter -->
+      <a href="https://x.com/a7k47452519" target="_blank" class="slink" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: #a1a1a1; z-index: 9999; position: relative;">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px; fill: currentColor;">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            <span style="font-size: 14px;">X</span>
+        </a>
+      <!-- TikTok -->
+      <a href="https://www.tiktok.com/@avision.av" target="_blank" class="slink" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: #a1a1a1; z-index: 9999; position: relative;">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 18px; height: 18px; fill: currentColor;">
+        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.88c.18 0 .35.02.53.05V9.1a5.74 5.74 0 0 0-3.42 1.15A5.77 5.77 0 0 0 5 15.17a5.77 5.77 0 0 0 5.77 5.77 5.77 5.77 0 0 0 5.77-5.77V8.46a8.29 8.29 0 0 0 5.24 1.83V6.69z"></path>
+    </svg>
+    <span style="font-size: 14px;">TikTok</span>
+</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#home" class="nav-logo">
+    <img src="logos/White.png" alt="logo" style="width: 35px; height: 35px; object-fit: contain; display: inline-block; vertical-align: middle;">
+    <span class="nav-logo-text">Avision</span>
+</a>
+  <div class="f-copy">© 2026 · صُنع بنية</div>
+</footer>
+
+<script>
+function switchTab(id,btn){
+  document.querySelectorAll('.wpanel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.wtab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+  document.querySelectorAll('#panel-'+id+' .reveal').forEach(el=>{
+    el.classList.remove('visible');
+    setTimeout(()=>el.classList.add('visible'),60);
+  });
+}
+const obs=new IntersectionObserver(e=>e.forEach(i=>{if(i.isIntersecting)i.target.classList.add('visible')}),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+const mq=document.getElementById('mqt');
+mq.innerHTML+=mq.innerHTML;
+</script>
+</body>
+</html>
